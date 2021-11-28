@@ -4,19 +4,17 @@ import {
     Text,
     // TouchableOpacity,
     ImageBackground,
-    TextInput,
     StyleSheet,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-import { useTheme } from 'react-native-paper';
 
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 import Canvas from 'react-native-canvas';
+import color from '../../constant/color';
 
-const EditProfileScreen = () => {
+const DetectScreen = () => {
 
     const [image, setImage] = useState(null);
     const [visible, setVisible] = useState(1)
@@ -85,35 +83,6 @@ const EditProfileScreen = () => {
         }
 
     }
-
-    const uploadImage = async () => {
-        // Check if any file is selected or not
-        if (singleFile != null) {
-            // If file selected then create FormData
-            const fileToUpload = singleFile;
-            const data = new FormData();
-            data.append('name', 'Image Upload');
-            data.append('file_attachment', fileToUpload);
-            // Please change file upload URL
-            let res = await fetch(
-                'http://localhost/upload.php',
-                {
-                    method: 'post',
-                    body: data,
-                    headers: {
-                        'Content-Type': 'multipart/form-data; ',
-                    },
-                }
-            );
-            let responseJson = await res.json();
-            if (responseJson.status == 1) {
-                alert('Upload Successful');
-            }
-        } else {
-            // If no file selected the show alert
-            alert('Please Select File first');
-        }
-    };
 
     const choosePhotoFromLibrary = async () => {
 
@@ -231,7 +200,7 @@ const EditProfileScreen = () => {
                                 width: 300,
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                borderColor: '#f15454',
+                                borderColor: bgc,
                                 borderWidth: image ? 0 : 2,
                                 borderRadius: 10
                             }}>
@@ -290,9 +259,6 @@ const EditProfileScreen = () => {
 
                         </View>
                     </TouchableOpacity>
-                    <Text style={{ marginTop: 10, fontSize: 18, fontWeight: 'bold' }}>
-                        John Doe
-                    </Text>
                 </View>
 
 
@@ -304,16 +270,17 @@ const EditProfileScreen = () => {
     );
 };
 
-export default EditProfileScreen;
-
+export default DetectScreen;
+const { bgc } = color
 const styles = StyleSheet.create({
-    // container: {
-    //     flex: 1,
-    // },
+    container: {
+        flex: 1,
+        marginTop: 20
+    },
     commandButton: {
         padding: 15,
         borderRadius: 10,
-        backgroundColor: '#FF6347',
+        backgroundColor: bgc,
         alignItems: 'center',
         marginTop: 10,
     },
@@ -322,12 +289,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         paddingTop: 20,
         zIndex: 100
-        // borderTopLeftRadius: 20,
-        // borderTopRightRadius: 20,
-        // shadowColor: '#000000',
-        // shadowOffset: {width: 0, height: 0},
-        // shadowRadius: 5,
-        // shadowOpacity: 0.4,
     },
     header: {
         backgroundColor: '#FFFFFF',

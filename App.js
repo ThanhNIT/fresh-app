@@ -9,8 +9,10 @@ import DestinationSearch from './screens/DestinationSearch';
 import GuestsScreen from './screens/Guests';
 import 'react-native-gesture-handler'
 import Router from './navigation/Router';
-import EditProfileScreen from './screens/EditProfileScreen';
-import SplashScreen from './screens/Splash';
+import EditProfileScreen from './screens/DetectScreen';
+import SignInScreen from './screens/Login';
+import SignUpScreen from './screens/Signup';
+import DetectScreen from './screens/DetectScreen';
 export default function App() {
   const post1 = feed[0]
   return (
@@ -21,9 +23,10 @@ export default function App() {
       {/* <SearchResultScreen></SearchResultScreen> */}
       {/* <DestinationSearch></DestinationSearch> */}
       {/* <GuestsScreen></GuestsScreen> */}
-      {/* <Router></Router> */}
-      {/* <EditProfileScreen></EditProfileScreen> */}
-      <SplashScreen></SplashScreen>
+      <Router></Router>
+      {/* <SplashScreen></SplashScreen> */}
+      {/* <SignInScreen></SignInScreen> */}
+      {/* <SignUpScreen></SignUpScreen> */}
 
     </>
   );
