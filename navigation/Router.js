@@ -8,6 +8,7 @@ import SignInScreen from '../screens/Login';
 import SignUpScreen from '../screens/Signup';
 import Home from '../screens/Home';
 import DetectScreen from '../screens/DetectScreen';
+import SearchResultScreen from '../screens/SearchResult';
 const Stack = createStackNavigator();
 const Router = () => {
 
@@ -18,6 +19,7 @@ const Router = () => {
                 <Stack.Screen name={'Detect'} component={DetectScreen} options={{ title: 'Detect' }}></Stack.Screen>
                 <Stack.Screen name={'Signin'} component={SignInScreen} options={{ title: 'Sign In', headerTransparent: true }}></Stack.Screen>
                 <Stack.Screen name={'Signup'} component={SignUpScreen} options={{ title: 'Sign Up', headerTransparent: true }}></Stack.Screen>
+                <Stack.Screen name={'History'} component={SearchResultScreen} options={{ title: 'History', headerTransparent: true }}></Stack.Screen>
             </Stack.Navigator>
         </NavigationContainer>
     )

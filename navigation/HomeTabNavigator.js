@@ -10,6 +10,7 @@ import ExploreNavigator from './ExploreNavigator'
 import SignInScreen from '../screens/Login'
 import SignUpScreen from '../screens/Signup'
 import DetectScreen from '../screens/DetectScreen'
+import HistoryScreen from '../screens/History'
 
 const Tab = createBottomTabNavigator()
 
@@ -18,6 +19,17 @@ const HomeTabNavigator = (props) => {
         <Tab.Navigator screenOptions={{
             tabBarActiveTintColor: '#f15454',
         }}>
+            <Tab.Screen name={"History"}
+                component={HistoryScreen}
+                options={{
+                    tabBarIcon: ({
+                        color
+                    }) => (
+                        <Feather name='message-square' size={25} color={color}></Feather>
+                    ), headerShown: false
+                }}>
+
+            </Tab.Screen>
             <Tab.Screen name={"Home"}
                 component={Home}
                 options={{
