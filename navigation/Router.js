@@ -8,7 +8,8 @@ import SignInScreen from '../screens/Login';
 import SignUpScreen from '../screens/Signup';
 import Home from '../screens/Home';
 import DetectScreen from '../screens/DetectScreen';
-import SearchResultScreen from '../screens/SearchResult';
+import HistoryScreen from '../screens/History';
+import DetailDetectionScreen from '../screens/DetailDetectionScreen';
 const Stack = createStackNavigator();
 const Router = () => {
 
@@ -17,9 +18,11 @@ const Router = () => {
             <Stack.Navigator>
                 <Stack.Screen name={'Home'} component={HomeTabNavigator} options={{ headerShown: false, }}></Stack.Screen>
                 <Stack.Screen name={'Detect'} component={DetectScreen} options={{ title: 'Detect' }}></Stack.Screen>
+                <Stack.Screen name={'Result'} component={DetailDetectionScreen} options={{ title: 'Result' }}></Stack.Screen>
                 <Stack.Screen name={'Signin'} component={SignInScreen} options={{ title: 'Sign In', headerTransparent: true }}></Stack.Screen>
                 <Stack.Screen name={'Signup'} component={SignUpScreen} options={{ title: 'Sign Up', headerTransparent: true }}></Stack.Screen>
-                <Stack.Screen name={'History'} component={SearchResultScreen} options={{ title: 'History', headerTransparent: true }}></Stack.Screen>
+                <Stack.Screen name={'History'} component={HistoryScreen} options={{ title: 'History', headerTransparent: true }}></Stack.Screen>
+                <Stack.Screen name={'HistoryDetail'} component={DetailDetectionScreen} options={{ title: 'Result' }}></Stack.Screen>
             </Stack.Navigator>
         </NavigationContainer>
     )

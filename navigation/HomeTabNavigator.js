@@ -5,13 +5,13 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Feather from 'react-native-vector-icons/Feather'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import ExploreNavigator from './ExploreNavigator'
 import SignInScreen from '../screens/Login'
 import SignUpScreen from '../screens/Signup'
 import DetectScreen from '../screens/DetectScreen'
 import HistoryScreen from '../screens/History'
+import color from '../constant/color'
 
+const { bgc, statusBarColor } = color
 const Tab = createBottomTabNavigator()
 
 const HomeTabNavigator = (props) => {
@@ -26,7 +26,9 @@ const HomeTabNavigator = (props) => {
                         color
                     }) => (
                         <Feather name='message-square' size={25} color={color}></Feather>
-                    ), headerShown: false
+                    ), headerStyle: {
+                        backgroundColor: bgc
+                    }
                 }}>
 
             </Tab.Screen>

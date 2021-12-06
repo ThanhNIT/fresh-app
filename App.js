@@ -1,10 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import Post from './components/Post';
+import HistoryCard from './components/HistoryCard';
 import Home from './screens/Home'
 import feed from './assets/data/feed';
-import SearchResultScreen from './screens/SearchResult';
 import DestinationSearch from './screens/DestinationSearch';
 import GuestsScreen from './screens/Guests';
 import 'react-native-gesture-handler'
@@ -13,6 +12,9 @@ import EditProfileScreen from './screens/DetectScreen';
 import SignInScreen from './screens/Login';
 import SignUpScreen from './screens/Signup';
 import DetectScreen from './screens/DetectScreen';
+import Rating from './components/Rating';
+import DetailDetectionScreen from './screens/DetailDetectionScreen';
+
 export default function App() {
   const post1 = feed[0]
   return (
@@ -27,6 +29,9 @@ export default function App() {
       {/* <SplashScreen></SplashScreen> */}
       {/* <SignInScreen></SignInScreen> */}
       {/* <SignUpScreen></SignUpScreen> */}
+      {/* <Rating gain={2} sz={40}></Rating> */}
+      {/* <DatePicker></DatePicker> */}
+      {/* <DetailDetectionScreen></DetailDetectionScreen> */}
 
     </>
   );

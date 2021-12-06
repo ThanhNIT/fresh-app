@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text } from 'react-native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
-import SearchResultScreen from '../screens/SearchResult'
+import HistoryScreen from '../screens/History'
 const Tab = createMaterialTopTabNavigator()
 const SearchResultsTabNavigator = () => {
     return (

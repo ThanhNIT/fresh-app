@@ -13,6 +13,7 @@ import Animated from 'react-native-reanimated';
 import * as ImagePicker from 'expo-image-picker';
 import Canvas from 'react-native-canvas';
 import color from '../../constant/color';
+import { useNavigation } from '@react-navigation/core';
 
 const DetectScreen = () => {
 
@@ -20,6 +21,8 @@ const DetectScreen = () => {
     const [visible, setVisible] = useState(1)
     const [camStatus, setCamStatus] = useState(false)
     const [libStatus, setLibStatus] = useState(false)
+
+    const navigation = useNavigation()
 
     const takePhotoFromCamera = async () => {
 
@@ -56,31 +59,32 @@ const DetectScreen = () => {
     }
 
     const uploadFile = async () => {
-        if (image) {
-            let url = 'http://192.168.43.54:5000/api/fresh/detect'
-            // ImagePicker saves the taken photo to disk and returns a local URI to it
-            let localUri = image.uri;
-            let filename = localUri.split('/').pop();
+        // if (image) {
+        //     let url = 'http://192.168.43.54:5000/api/fresh/detect'
+        //     // ImagePicker saves the taken photo to disk and returns a local URI to it
+        //     let localUri = image.uri;
+        //     let filename = localUri.split('/').pop();
 
-            // Infer the type of the image
-            let match = /\.(\w+)$/.exec(filename);
-            let type = match ? `image/${match[1]}` : `image`;
+        //     // Infer the type of the image
+        //     let match = /\.(\w+)$/.exec(filename);
+        //     let type = match ? `image/${match[1]}` : `image`;
 
-            // Upload the image using the fetch and FormData APIs
-            let formData = new FormData();
-            // Assume "photo" is the name of the form field the server expects
-            formData.append('file', { uri: localUri, name: filename, type });
+        //     // Upload the image using the fetch and FormData APIs
+        //     let formData = new FormData();
+        //     // Assume "photo" is the name of the form field the server expects
+        //     formData.append('file', { uri: localUri, name: filename, type });
 
-            fetch(url, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'content-type': 'multipart/form-data',
-                },
-            }).then(response => response.json())
-                .then(data => setImage({ uri: data }));
+        //     fetch(url, {
+        //         method: 'POST',
+        //         body: formData,
+        //         headers: {
+        //             'content-type': 'multipart/form-data',
+        //         },
+        //     }).then(response => response.json())
+        //         .then(data => setImage({ uri: data }));
 
-        }
+        // }
+        navigation.navigate('Result')
 
     }
 

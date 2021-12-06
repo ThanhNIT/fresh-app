@@ -22,6 +22,9 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         resizeMode: "cover",
         borderRadius: 10
+    },
+    date: {
+        textAlign: 'right'
     }
 })
 

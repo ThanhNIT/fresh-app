@@ -49,7 +49,7 @@ const Home = () => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor={bgc} barStyle="light-content" />
+            <StatusBar backgroundColor={statusBarColor} barStyle="light-content" />
             <View style={styles.header}>
                 <Animatable.Image
                     animation="bounceIn"
@@ -94,12 +94,12 @@ const Home = () => {
 
 const { height } = Dimensions.get("screen");
 const height_logo = height * 0.20;
-const { bgc } = color
+const { bgc, statusBarColor } = color
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fedfc0'
+        backgroundColor: bgc
     },
     header: {
         flex: 2,
