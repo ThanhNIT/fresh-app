@@ -7,7 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Feather from 'react-native-vector-icons/Feather'
 import { useNavigation } from '@react-navigation/core'
 import { useSelector, useDispatch } from 'react-redux'
-import { listHistory } from '../../actions/historyActions'
+import { listHistory, listHistoryWithDuration } from '../../actions/historyActions'
 import { USER_LOGIN_SUCCESS } from '../../constant/UserConstant'
 import { HISTORY_LIST_RESET } from '../../constant/HistoryConstant'
 
@@ -25,6 +25,7 @@ const HistoryScreen = () => {
     const [skip, setSkip] = useState(0)
     const [limit, setLimit] = useState(1)
     const [direction, setDirection] = useState(false);
+    const [duration, setDuration] = useState(false)
     const dispatch = useDispatch();
 
     const { loading, histories } = useSelector((state) => state.historiesList)
@@ -67,8 +68,9 @@ const HistoryScreen = () => {
                 ]);
             }
             else {
-
+                reload()
                 setTo(newDate);
+                setDuration(true)
             }
         } else {
             const currentDate = selectedDate || to;
@@ -113,13 +115,25 @@ const HistoryScreen = () => {
 
     }
 
+    const getAll = () => {
+        setDuration(false)
+        reload()
+        setFrom(d)
+        setTo(new Date())
+    }
+
 
     useEffect(() => {
 
         if (user && user.token) {
-            dispatch(listHistory(skip, limit, histories))
+
+            if (duration) {
+                dispatch(listHistoryWithDuration(skip, limit, histories, from.toISOString().split('T')[0], to.toISOString().split('T')[0]))
+            } else {
+                dispatch(listHistory(skip, limit, histories))
+            }
         }
-    }, [dispatch, user, skip])
+    }, [dispatch, user, skip, to])
 
     return (
 
@@ -141,7 +155,7 @@ const HistoryScreen = () => {
                     <Text style={[styles.text, styles.textDate]}>{to.toLocaleDateString()}</Text>
                     <Feather onPress={showTo} style={{ paddingLeft: 5 }} name='calendar' size={20} color={color.bgc}></Feather>
                 </View>
-                <Text onPress={reload} style={{ marginLeft: 30, marginRight: 20, color: color.bgc, fontSize: 16 }}>All</Text>
+                <Text onPress={getAll} style={{ marginLeft: 30, marginRight: 20, color: color.bgc, fontSize: 16 }}>All</Text>
             </View>
             {show && (
                 <DateTimePicker
@@ -158,7 +172,7 @@ const HistoryScreen = () => {
                 <FlatList data={histories} renderItem={({ item, i }) => <HistoryCard key={i} onPress={() => console.warn('cliecked')} post={item} ></HistoryCard>}>
                 </FlatList >
             </View >
-            {histories.length >= (skip + 1) * limit && <View style={{ alignItems: 'center' }} >
+            {histories && histories.length >= (skip + 1) * limit && <View style={{ alignItems: 'center' }} >
                 <Text style={{ color: color.bgc }} onPress={() => setSkip(skip + 1)}>Load more</Text>
             </View>}
         </View>

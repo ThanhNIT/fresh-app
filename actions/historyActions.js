@@ -11,7 +11,6 @@ export const listHistory = (skip = 0, limit = 1, histories = []) => async (dispa
         dispatch({ type: HISTORY_LIST_REQUEST, payload: histories })
         const user = await AsyncStorage.getItem('userInfo')
         const userInfo = user ? JSON.parse(user) : null
-        console.log({ historiesBef: histories.length })
         const config = {
             headers: {
                 'Content-Type': 'application/json',
@@ -20,10 +19,33 @@ export const listHistory = (skip = 0, limit = 1, histories = []) => async (dispa
         }
 
         const payload = { skip: skip, limit: limit }
-        console.log({ payload: payload })
         const { data } = await axios.post(`${api}/histories/`, payload, config)
         histories.push(...data.data)
-        console.log({ histories: histories.length })
+        dispatch({ type: HISTORY_LIST_SUCCESS, payload: histories })
+
+    } catch (error) {
+
+        dispatch({ type: HISTORY_LIST_FAILED, payload: error })
+    }
+}
+
+export const listHistoryWithDuration = (skip = 0, limit = 1, histories = [], from, to) => async (dispatch, getState) => {
+    try {
+
+        dispatch({ type: HISTORY_LIST_REQUEST, payload: histories })
+        const user = await AsyncStorage.getItem('userInfo')
+        const userInfo = user ? JSON.parse(user) : null
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+
+        const payload = { skip: skip, limit: limit, start_date: from, end_date: to }
+        const data = await axios.post(`${api}/histories/duration/`, payload, config)
+        histories.push(...data.data.data)
         dispatch({ type: HISTORY_LIST_SUCCESS, payload: histories })
 
     } catch (error) {
