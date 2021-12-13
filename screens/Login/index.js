@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -7,8 +7,7 @@ import {
     Platform,
     StyleSheet,
     StatusBar,
-    Alert,
-    Pressable
+    Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -16,13 +15,17 @@ import Feather from 'react-native-vector-icons/Feather';
 
 import { useTheme } from 'react-native-paper';
 
-import { AuthContext } from '../../components/context';
 
-import Users from '../../assets/data/user';
 import color from '../../constant/color'
 import { useNavigation } from '@react-navigation/core';
+import { AsyncStorage } from 'react-native';
+import constant from '../../constant/constant'
+import { login } from '../../actions/userActions';
+import { useSelector, useDispatch } from 'react-redux'
+const api = constant.api
 
 const SignInScreen = () => {
+
 
     const navigation = useNavigation()
     const [data, setData] = React.useState({
@@ -34,12 +37,15 @@ const SignInScreen = () => {
         isValidPassword: true,
     });
 
+
     const { colors } = useTheme();
 
-    // const { signIn } = React.useContext(AuthContext);
+    const { loading, userInfo } = useSelector(state => state.userLogin)
+
+    const dispatch = useDispatch()
 
     const textInputChange = (val) => {
-        if (val.trim().length >= 4) {
+        if (val.trim().length >= 4 && validateEmail(val.trim())) {
             setData({
                 ...data,
                 username: val,
@@ -57,7 +63,7 @@ const SignInScreen = () => {
     }
 
     const handlePasswordChange = (val) => {
-        if (val.trim().length >= 8) {
+        if (val.trim().length >= 4) {
             setData({
                 ...data,
                 password: val,
@@ -80,7 +86,7 @@ const SignInScreen = () => {
     }
 
     const handleValidUser = (val) => {
-        if (val.trim().length >= 4) {
+        if (val.trim().length >= 4 && validateEmail(val.trim())) {
             setData({
                 ...data,
                 isValidUser: true
@@ -93,11 +99,20 @@ const SignInScreen = () => {
         }
     }
 
+    useEffect(() => {
+        if (userInfo) {
+            navigation.navigate('History')
+
+        }
+    }, [dispatch, userInfo])
+
+    const validateEmail = (email) => {
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    };
+
     const loginHandle = (userName, password) => {
 
-        const foundUser = Users.filter(item => {
-            return userName == item.username && password == item.password;
-        });
 
         if (data.username.length == 0 || data.password.length == 0) {
             Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
@@ -105,22 +120,19 @@ const SignInScreen = () => {
             ]);
             return;
         }
+        dispatch(login(userName, password))
 
-        if (foundUser.length == 0) {
-            Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-                { text: 'Okay' }
-            ]);
-            return;
-        }
-        // signIn(foundUser);
+
     }
 
     return (
         <View style={styles.container}>
+
             <StatusBar backgroundColor={statusBarColor} barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.text_header}>Welcome!</Text>
             </View>
+
             <Animatable.View
                 animation="fadeInUpBig"
                 style={[styles.footer, {
@@ -160,7 +172,7 @@ const SignInScreen = () => {
                 </View>
                 {data.isValidUser ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
+                        <Text style={styles.errorMsg}>Username must be 4 characters long and follow email format</Text>
                     </Animatable.View>
                 }
 
@@ -205,7 +217,7 @@ const SignInScreen = () => {
                 </View>
                 {data.isValidPassword ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
+                        <Text style={styles.errorMsg}>Password must be 4 characters long.</Text>
                     </Animatable.View>
                 }
 
@@ -247,7 +259,8 @@ const { bgc, statusBarColor } = color
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: bgc
+        backgroundColor: bgc,
+        justifyContent: 'center'
     },
     header: {
         flex: 1,

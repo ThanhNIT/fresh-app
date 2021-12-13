@@ -1,24 +1,34 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import HistoryCard from './components/HistoryCard';
-import Home from './screens/Home'
+import React, { useState } from 'react';
 import feed from './assets/data/feed';
-import DestinationSearch from './screens/DestinationSearch';
-import GuestsScreen from './screens/Guests';
 import 'react-native-gesture-handler'
 import Router from './navigation/Router';
-import EditProfileScreen from './screens/DetectScreen';
-import SignInScreen from './screens/Login';
-import SignUpScreen from './screens/Signup';
-import DetectScreen from './screens/DetectScreen';
-import Rating from './components/Rating';
-import DetailDetectionScreen from './screens/DetailDetectionScreen';
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { Provider, useDispatch } from 'react-redux'
+import { historyListReducer } from './reducers/historyReducer';
+import { userLoginReducer } from './reducers/userReducer';
+import { composeWithDevTools } from 'redux-devtools-extension'
+import thunk from 'redux-thunk'
+
+const reducer = combineReducers({
+  historiesList: historyListReducer,
+  userLogin: userLoginReducer
+})
+
+const initialState = {
+  userLogin: { loading: false, userInfo: null }
+}
+const middleware = [thunk]
+const store = createStore(
+  reducer,
+  initialState,
+  composeWithDevTools(applyMiddleware(...middleware))
+)
 
 export default function App() {
-  const post1 = feed[0]
+
   return (
-    <>
+    <Provider store={store}>
       <StatusBar barStyle='dark-content'></StatusBar>
       {/* <Home></Home> */}
       {/* <Post post={post1}></Post> */}
@@ -33,7 +43,7 @@ export default function App() {
       {/* <DatePicker></DatePicker> */}
       {/* <DetailDetectionScreen></DetailDetectionScreen> */}
 
-    </>
+    </Provider>
   );
 }
 

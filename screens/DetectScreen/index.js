@@ -5,6 +5,10 @@ import {
     // TouchableOpacity,
     ImageBackground,
     StyleSheet,
+    ActivityIndicator,
+    Dimensions,
+    AsyncStorage,
+    Alert,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -14,6 +18,9 @@ import * as ImagePicker from 'expo-image-picker';
 import Canvas from 'react-native-canvas';
 import color from '../../constant/color';
 import { useNavigation } from '@react-navigation/core';
+import Spinner from '../../components/Spinner';
+import constant from '../../constant/constant'
+const url = constant.api
 
 const DetectScreen = () => {
 
@@ -21,8 +28,13 @@ const DetectScreen = () => {
     const [visible, setVisible] = useState(1)
     const [camStatus, setCamStatus] = useState(false)
     const [libStatus, setLibStatus] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const navigation = useNavigation()
+
+    useEffect(() => {
+        setLoading(false)
+    }, [])
 
     const takePhotoFromCamera = async () => {
 
@@ -59,32 +71,47 @@ const DetectScreen = () => {
     }
 
     const uploadFile = async () => {
-        // if (image) {
-        //     let url = 'http://192.168.43.54:5000/api/fresh/detect'
-        //     // ImagePicker saves the taken photo to disk and returns a local URI to it
-        //     let localUri = image.uri;
-        //     let filename = localUri.split('/').pop();
+        setLoading(true)
+        if (image) {
+            // ImagePicker saves the taken photo to disk and returns a local URI to it
+            let localUri = image.uri;
+            let filename = localUri.split('/').pop();
 
-        //     // Infer the type of the image
-        //     let match = /\.(\w+)$/.exec(filename);
-        //     let type = match ? `image/${match[1]}` : `image`;
+            // Infer the type of the image
+            let match = /\.(\w+)$/.exec(filename);
+            let type = match ? `image/${match[1]}` : `image`;
 
-        //     // Upload the image using the fetch and FormData APIs
-        //     let formData = new FormData();
-        //     // Assume "photo" is the name of the form field the server expects
-        //     formData.append('file', { uri: localUri, name: filename, type });
+            // Upload the image using the fetch and FormData APIs
+            let formData = new FormData();
+            // Assume "photo" is the name of the form field the server expects
+            formData.append('file', { uri: localUri, name: filename, type });
+            fetch(url + '/fresh/detect', {
+                method: 'POST',
+                timeout: 10,
+                body: formData,
+                headers: {
+                    'content-type': 'multipart/form-data',
+                },
+            }).then(response => response.json())
+                .then(async data => {
+                    if (data.url) {
+                        await AsyncStorage.setItem('result', JSON.stringify(data))
+                        data.allowRate = true
+                        navigation.navigate('Result', data)
+                    } else {
+                        Alert.alert('Error!', 'An error occered', [
+                            { text: 'Okay' }
+                        ]);
+                    }
+                    setLoading(false);
 
-        //     fetch(url, {
-        //         method: 'POST',
-        //         body: formData,
-        //         headers: {
-        //             'content-type': 'multipart/form-data',
-        //         },
-        //     }).then(response => response.json())
-        //         .then(data => setImage({ uri: data }));
+                }).catch((err) => setLoading(false));
 
-        // }
-        navigation.navigate('Result')
+        }
+
+
+
+
 
     }
 
@@ -179,7 +206,8 @@ const DetectScreen = () => {
 
     return (
         <View style={styles.container}>
-            <BottomSheet
+            {loading && <Spinner></Spinner>}
+            <View style={{ opacity: loading ? 0.3 : 1 }}><BottomSheet
                 ref={this.bs}
                 snapPoints={[330, -40]}
                 renderContent={renderInner}
@@ -191,85 +219,85 @@ const DetectScreen = () => {
                 enabledContentTapInteraction={false}
 
             />
-            <Animated.View style={{
-                margin: 20,
-                opacity: Animated.add(0.0, Animated.multiply(this.fall, 1.0)),
+                <Animated.View style={{
+                    margin: 20,
+                    opacity: Animated.add(0.0, Animated.multiply(this.fall, 1.0)),
 
-            }}>
-                <View style={{ alignItems: 'center' }}>
-                    <TouchableOpacity onPress={closeSheet}>
-                        <View
-                            style={{
-                                height: 500,
-                                width: 300,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderColor: bgc,
-                                borderWidth: image ? 0 : 2,
-                                borderRadius: 10
-                            }}>
-
-                            {!image ?
-
-                                <View style={{ justifyContent: 'center', alignItems: 'center' }}><View style={{
-                                    height: 100,
-                                    width: 100,
-                                    borderRadius: 15,
+                }}>
+                    <View style={{ alignItems: 'center' }}>
+                        <TouchableOpacity onPress={closeSheet}>
+                            <View
+                                style={{
+                                    height: 500,
+                                    width: 300,
                                     justifyContent: 'center',
                                     alignItems: 'center',
+                                    borderColor: bgc,
+                                    borderWidth: image ? 0 : 2,
+                                    borderRadius: 10
+                                }}>
 
+                                {!image ?
 
-                                }}
-                                    opacity={0.5}
-                                >
-                                    <ImageBackground source={require('../../assets/picture.png')}
-                                        style={{ flex: 1, height: 100, width: 100 }}
-                                        resizeMode='contain'
-                                    >
-
-                                    </ImageBackground>
-
-                                </View>
-                                    <Text style={styles.imageSubtitle} numberOfLines={2}>
-                                        Take a photo or select image from library
-                                    </Text>
-                                </View>
-                                :
-
-
-                                <ImageBackground
-                                    // source={{ uri: image }}
-                                    source={{ uri: image.uri }}
-                                    style={{ flex: 1, height: undefined, width: undefined }}
-                                    resizeMode='contain'
-                                >
-                                    <Canvas ref={this.handleCanvas} />
-
-                                    {/* 
-                                        
-                                     */}
-                                    <View style={{
-                                        height: 500,
-                                        width: 300,
+                                    <View style={{ justifyContent: 'center', alignItems: 'center' }}><View style={{
+                                        height: 100,
+                                        width: 100,
                                         borderRadius: 15,
                                         justifyContent: 'center',
                                         alignItems: 'center',
 
+
                                     }}
+                                        opacity={0.5}
                                     >
+                                        <ImageBackground source={require('../../assets/picture.png')}
+                                            style={{ flex: 1, height: 100, width: 100 }}
+                                            resizeMode='contain'
+                                        >
+
+                                        </ImageBackground>
+
                                     </View>
-                                </ImageBackground>
-                            }
+                                        <Text style={styles.imageSubtitle} numberOfLines={2}>
+                                            Take a photo or select image from library
+                                        </Text>
+                                    </View>
+                                    :
 
-                        </View>
+
+                                    <ImageBackground
+                                        // source={{ uri: image }}
+                                        source={{ uri: image.uri }}
+                                        style={{ flex: 1, height: undefined, width: undefined }}
+                                        resizeMode='contain'
+                                    >
+                                        <Canvas ref={this.handleCanvas} />
+
+                                        {/* 
+                                        
+                                     */}
+                                        <View style={{
+                                            height: 500,
+                                            width: 300,
+                                            borderRadius: 15,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+
+                                        }}
+                                        >
+                                        </View>
+                                    </ImageBackground>
+                                }
+
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+
+                    <TouchableOpacity style={styles.commandButton} onPress={uploadFile}>
+                        <Text style={styles.panelButtonTitle}>Submit</Text>
                     </TouchableOpacity>
-                </View>
+                </Animated.View></View>
 
-
-                <TouchableOpacity style={styles.commandButton} onPress={uploadFile}>
-                    <Text style={styles.panelButtonTitle}>Submit</Text>
-                </TouchableOpacity>
-            </Animated.View>
         </View>
     );
 };
@@ -279,7 +307,8 @@ const { bgc } = color
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 20
+        marginTop: 20,
+        justifyContent: 'center'
     },
     commandButton: {
         padding: 15,

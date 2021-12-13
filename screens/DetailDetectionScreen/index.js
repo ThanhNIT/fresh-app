@@ -1,26 +1,78 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
     // TouchableOpacity,
     ImageBackground,
     StyleSheet,
+    AsyncStorage,
+    FlatList,
+    Alert,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import Animated from 'react-native-reanimated';
-import Canvas from 'react-native-canvas';
 import color from '../../constant/color';
 import Rating from '../../components/Rating';
+import { useNavigation } from '@react-navigation/native';
 
-const DetailDetectionScreen = () => {
+const DetailDetectionScreen = ({ route }) => {
 
-    const [image, setImage] = useState(null);
+    const [result, setResult] = useState(route.params)
+    const [rating, setRating] = useState(0)
+    const [user, setUser] = useState(null)
+    const [fruit, setFruit] = useState([{ name: 'apple', qty: 0 }, { name: 'banana', qty: 0 }, { name: 'orange', qty: 0 }, { name: 'kiwi', qty: 0 }])
+    const getResult = () => {
+        const qty = [{ name: 'apple', qty: 0 }, { name: 'banana', qty: 0 }, { name: 'orange', qty: 0 }, { name: 'kiwi', qty: 0 }]
 
-    renderCanvas = () => {
-        return (
-            <Canvas ref={this.handleCanvas} />
-        )
+        if (result && result.result) {
+            result.result.map((e) => {
+                if (e.cls === '0') qty[0].qty += 1;
+                if (e.cls === '1') qty[1].qty += 1;
+                if (e.cls === '2') qty[2].qty += 1;
+                if (e.cls === '3') qty[3].qty += 1;
+            })
+        }
+        setFruit(qty)
+
+    }
+
+    const navigation = useNavigation()
+
+    async function getUser() {
+        try {
+            const user = await AsyncStorage.getItem('userInfo')
+            return user ? JSON.parse(user) : null;
+        } catch (e) {
+            console.log('Failed to fetch the data from storage');
+        }
+    }
+
+
+    if (!user) {
+        getUser().then(data => {
+            setUser(data);
+            dispatch({
+                type: USER_LOGIN_SUCCESS,
+                payload: user
+            })
+        })
+
+    }
+
+    useEffect(() => {
+        getResult()
+
+    }, [])
+
+    const handleValue = (star) => {
+        if (user) {
+            setRating(star)
+        } else {
+            Alert.alert('Oops', 'You need to login before rating.', [
+                { text: 'Okay', onPress: () => navigation.navigate('Signin') }
+            ]);
+        }
+
     }
 
     return (
@@ -34,11 +86,11 @@ const DetailDetectionScreen = () => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         borderColor: bgc,
-                        borderWidth: image ? 0 : 2,
+                        borderWidth: result ? 0 : 2,
                         borderRadius: 10
                     }}>
 
-                    {!image ?
+                    {!result ?
 
                         <View style={{ justifyContent: 'center', alignItems: 'center' }}><View style={{
                             height: 30,
@@ -67,11 +119,10 @@ const DetailDetectionScreen = () => {
 
                         <ImageBackground
                             // source={{ uri: image }}
-                            source={{ uri: image.uri }}
+                            source={{ uri: result.url }}
                             style={{ flex: 1, height: undefined, width: undefined }}
                             resizeMode='contain'
                         >
-                            <Canvas ref={this.handleCanvas} />
 
                             <View style={{
                                 height: 500,
@@ -90,18 +141,21 @@ const DetailDetectionScreen = () => {
 
             </View>
 
-            <View style={{ flex: 1, marginTop: 10, }}>
-                <Text style={styles.date}>apple: 3</Text>
-                <Text style={styles.date}>banana: 3</Text>
-                <Text style={styles.date}>orange: 0</Text>
-                <Text style={styles.date}>kiwi: 0</Text>
+            <View style={{ flex: 1, marginTop: 5, }}>
+                {fruit[0].qty > 0 && <Text style={styles.date}>Apple: {fruit[0].qty}</Text>}
+                {fruit[1].qty > 0 && <Text style={styles.date}>Banana: {fruit[1].qty}</Text>}
+                {fruit[2].qty > 0 && <Text style={styles.date}>Orange: {fruit[2].qty}</Text>}
+                {fruit[3].qty > 0 && <Text style={styles.date}>KiWi: {fruit[3].qty}</Text>}
+
+                {/* <FlatList data={fruit} renderItem={({ item }) => { item.qty && <Text style={styles.date}> {item.name}: {item.qty}</Text> }}>
+                </FlatList > */}
 
                 <View>
-                    <Text style={{ alignSelf: 'flex-end' }}>Excution time: 3s</Text>
+                    <Text style={{ alignSelf: 'flex-end' }}>Excution time: {(result && result.time && result.time.toFixed(2)) || 0}s</Text>
                     <View style={{ flexDirection: 'row' }}>
 
                         <Text style={{ alignSelf: 'flex-end', fontSize: 15 }}>Help us improve:</Text>
-                        <Rating sz={30}></Rating>
+                        <Rating sz={30} gain={result ? result.rate : 0} onChangeValue={handleValue} rt={result.allowRate}></Rating>
                     </View>
                 </View>
             </View>

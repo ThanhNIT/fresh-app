@@ -1,0 +1,1 @@
+export default { api: 'http://35.223.89.11/api' }

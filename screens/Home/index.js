@@ -42,7 +42,6 @@ import * as Animatable from 'react-native-animatable';
 import { useTheme } from '@react-navigation/native';
 import color from '../../constant/color';
 import { useNavigation } from '@react-navigation/native';
-
 const Home = () => {
     const { colors } = useTheme();
     const navigation = useNavigation()

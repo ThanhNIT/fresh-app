@@ -28,6 +28,11 @@ const SignUpScreen = ({ navigation }) => {
         confirm_secureTextEntry: true,
     });
 
+    const validateEmail = (email) => {
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    };
+
     const textInputChange = (val) => {
         if (val.length !== 0) {
             setData({
