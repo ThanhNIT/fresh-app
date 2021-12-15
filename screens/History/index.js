@@ -29,6 +29,7 @@ const HistoryScreen = () => {
     const dispatch = useDispatch();
 
     const { loading, histories } = useSelector((state) => state.historiesList)
+    const { userInfo } = useSelector((state) => state.userLogin)
 
     async function getUser() {
         try {
@@ -137,7 +138,7 @@ const HistoryScreen = () => {
 
     return (
 
-        <>{!user ? <View style={{ justifyContent: 'center', alignItems: 'center', top: Dimensions.get('window').height / 2 }}>
+        <>{!user && userInfo ? <View style={{ justifyContent: 'center', alignItems: 'center', top: Dimensions.get('window').height / 2 }}>
             <Text style={{ color: 'gray' }}>Please login with your account to see history</Text>
             <Pressable style={styles.buttonExplore} onPress={() => navigation.navigate('Signin')}>
                 <Text style={styles.buttonText}>Login</Text>

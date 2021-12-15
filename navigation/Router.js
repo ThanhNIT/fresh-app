@@ -10,6 +10,8 @@ import Home from '../screens/Home';
 import DetectScreen from '../screens/DetectScreen';
 import HistoryScreen from '../screens/History';
 import DetailDetectionScreen from '../screens/DetailDetectionScreen';
+import { SignOutScreen } from '../screens/Signout';
+import ChangePasswordScreen from '../screens/ChangePassword';
 const Stack = createStackNavigator();
 const Router = () => {
 
@@ -21,6 +23,8 @@ const Router = () => {
                 <Stack.Screen name={'Result'} component={DetailDetectionScreen} options={{ title: 'Result' }}></Stack.Screen>
                 <Stack.Screen name={'Signin'} component={SignInScreen} options={{ title: 'Sign In', headerTransparent: true }}></Stack.Screen>
                 <Stack.Screen name={'Signup'} component={SignUpScreen} options={{ title: 'Sign Up', headerTransparent: true }}></Stack.Screen>
+                <Stack.Screen name={'Signout'} component={SignOutScreen} options={{ title: 'Sign Out', headerTransparent: true }}></Stack.Screen>
+                <Stack.Screen name={'Change'} component={ChangePasswordScreen} options={{ title: 'Change Password', headerTransparent: true }}></Stack.Screen>
                 <Stack.Screen name={'HistoryList'} component={HistoryScreen} options={{ title: 'History List', headerTransparent: true }}></Stack.Screen>
                 <Stack.Screen name={'HistoryDetail'} component={DetailDetectionScreen} options={{ title: 'Result' }}></Stack.Screen>
             </Stack.Navigator>

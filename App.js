@@ -6,13 +6,18 @@ import Router from './navigation/Router';
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider, useDispatch } from 'react-redux'
 import { historyListReducer } from './reducers/historyReducer';
-import { userLoginReducer } from './reducers/userReducer';
+import { userChangePasswordReducer, userLoginReducer, userRegisterReducer } from './reducers/userReducer';
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
+import { SignOutScreen } from './screens/Signout';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import ForgotScreen from './screens/ForgotScreen';
 
 const reducer = combineReducers({
   historiesList: historyListReducer,
-  userLogin: userLoginReducer
+  userLogin: userLoginReducer,
+  userRegister: userRegisterReducer,
+  userChangePassword: userChangePasswordReducer,
 })
 
 const initialState = {
@@ -42,6 +47,10 @@ export default function App() {
       {/* <Rating gain={2} sz={40}></Rating> */}
       {/* <DatePicker></DatePicker> */}
       {/* <DetailDetectionScreen></DetailDetectionScreen> */}
+      {/* <SafeAreaProvider>
+        <SignOutScreen></SignOutScreen>
+      </SafeAreaProvider> */}
+      {/* <ForgotScreen></ForgotScreen> */}
 
     </Provider>
   );

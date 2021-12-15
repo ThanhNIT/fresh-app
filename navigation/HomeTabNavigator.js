@@ -3,13 +3,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Home from '../screens/Home'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import SignInScreen from '../screens/Login'
 import SignUpScreen from '../screens/Signup'
 import DetectScreen from '../screens/DetectScreen'
 import HistoryScreen from '../screens/History'
 import color from '../constant/color'
+import { SignOutScreen } from '../screens/Signout'
 
 const { bgc, statusBarColor } = color
 const Tab = createBottomTabNavigator()
@@ -25,7 +26,7 @@ const HomeTabNavigator = (props) => {
                     tabBarIcon: ({
                         color
                     }) => (
-                        <Feather name='message-square' size={25} color={color}></Feather>
+                        <FontAwesome name='history' size={25} color={color}></FontAwesome>
                     ), headerStyle: {
                         backgroundColor: bgc
                     }
@@ -38,32 +39,9 @@ const HomeTabNavigator = (props) => {
                     tabBarIcon: ({
                         color
                     }) => (
-                        <Fontisto name='search' size={25} color={color} />
+                        <Fontisto name='home' size={25} color={color} />
                     ),
                     headerShown: false
-                }}>
-
-            </Tab.Screen>
-            <Tab.Screen name={"Signin"}
-                component={SignInScreen}
-                options={{
-                    tabBarIcon: ({
-                        color
-                    }) => (
-                        <FontAwesome name='heart-o' size={25} color={color}></FontAwesome>
-                    ),
-                    headerShown: false
-                }}>
-
-            </Tab.Screen>
-            <Tab.Screen name={"Signup"}
-                component={SignUpScreen}
-                options={{
-                    tabBarIcon: ({
-                        color
-                    }) => (
-                        <FontAwesome5 name='airbnb' size={25} color={color}></FontAwesome5>
-                    ), headerShown: false
                 }}>
 
             </Tab.Screen>
@@ -73,8 +51,20 @@ const HomeTabNavigator = (props) => {
                     tabBarIcon: ({
                         color
                     }) => (
-                        <Feather name='message-square' size={25} color={color}></Feather>
+                        <AntDesign name='scan1' size={25} color={color}></AntDesign>
                     ), headerShown: false
+                }}>
+
+            </Tab.Screen>
+            <Tab.Screen name={"Profile"}
+                component={SignOutScreen}
+                options={{
+                    tabBarIcon: ({
+                        color
+                    }) => (
+                        <FontAwesome name='user' size={25} color={color}></FontAwesome>
+                    ),
+                    headerShown: false
                 }}>
 
             </Tab.Screen>

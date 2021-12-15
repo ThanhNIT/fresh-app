@@ -26,5 +26,4 @@ export const historyListReducer = (state = { histories: [], loading: false }, ac
 
         default: return state
     }
-
 }

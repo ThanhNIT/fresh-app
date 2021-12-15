@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -18,12 +18,13 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import color from '../../constant/color';
 import { useDispatch, useSelector } from 'react-redux';
-import { signup } from '../../actions/userActions';
+import { changePasswordAction } from '../../actions/userActions';
 
-const SignUpScreen = ({ navigation }) => {
+const ChangePasswordScreen = ({ navigation }) => {
 
     const [data, setData] = React.useState({
         username: '',
+        oldPassword: '',
         password: '',
         confirm_password: '',
         check_textInputChange: false,
@@ -31,12 +32,12 @@ const SignUpScreen = ({ navigation }) => {
         confirm_secureTextEntry: true,
     });
 
-    const { error, success } = useSelector(state => state.userRegister)
-    const dispatch = useDispatch()
     const validateEmail = (email) => {
         var re = /\S+@\S+\.\S+/;
         return re.test(email);
     };
+
+    const { error, success } = useSelector(state => state.userChangePassword)
 
     const textInputChange = (val) => {
         if (val.length !== 0) {
@@ -54,12 +55,20 @@ const SignUpScreen = ({ navigation }) => {
         }
     }
 
+    const handleOldPasswordChange = (val) => {
+        setData({
+            ...data,
+            oldPassword: val
+        });
+    }
+
     const handlePasswordChange = (val) => {
         setData({
             ...data,
             password: val
         });
     }
+
 
     const handleConfirmPasswordChange = (val) => {
         setData({
@@ -68,15 +77,15 @@ const SignUpScreen = ({ navigation }) => {
         });
     }
 
-    const signUp = () => {
-        dispatch(signup(data.username, data, password))
-    }
-
     const updateSecureTextEntry = () => {
         setData({
             ...data,
             secureTextEntry: !data.secureTextEntry
         });
+    }
+    const dispatch = useDispatch()
+    const changePassword = () => {
+        dispatch(changePasswordAction(data.oldPassword, data.password))
     }
 
     const updateConfirmSecureTextEntry = () => {
@@ -88,7 +97,7 @@ const SignUpScreen = ({ navigation }) => {
 
     useEffect(() => {
         if (error) {
-            Alert.alert('Oops!', error.message, [
+            Alert.alert('Error', error.message, [
                 { text: 'Okay' }
             ]);
         }
@@ -98,45 +107,19 @@ const SignUpScreen = ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar backgroundColor={statusBarColor} barStyle="light-content" />
             <View style={styles.header}>
-                <Text style={styles.text_header}>Register Now!</Text>
+                {/* <Text style={styles.text_header}>Change password</Text> */}
             </View>
-            {success && Alert.alert('Success', "Create account success", [
-                { text: 'Okay' }
-            ])}
+            {success && Alert.alert('Success', 'Change Password Success', [
+                { text: 'Okay' }])}
             <Animatable.View
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
                 <ScrollView>
-                    <Text style={styles.text_footer}>Username</Text>
-                    <View style={styles.action}>
-                        <FontAwesome
-                            name="user-o"
-                            color="#05375a"
-                            size={20}
-                        />
-                        <TextInput
-                            placeholder="Your Username"
-                            style={styles.textInput}
-                            autoCapitalize="none"
-                            onChangeText={(val) => textInputChange(val)}
-                        />
-                        {data.check_textInputChange ?
-                            <Animatable.View
-                                animation="bounceIn"
-                            >
-                                <Feather
-                                    name="check-circle"
-                                    color="green"
-                                    size={20}
-                                />
-                            </Animatable.View>
-                            : null}
-                    </View>
 
                     <Text style={[styles.text_footer, {
                         marginTop: 35
-                    }]}>Password</Text>
+                    }]}>Old Password</Text>
                     <View style={styles.action}>
                         <Feather
                             name="lock"
@@ -144,7 +127,42 @@ const SignUpScreen = ({ navigation }) => {
                             size={20}
                         />
                         <TextInput
-                            placeholder="Your Password"
+                            placeholder="Your Old Password"
+                            secureTextEntry={data.secureTextEntry ? true : false}
+                            style={styles.textInput}
+                            autoCapitalize="none"
+                            onChangeText={(val) => handleOldPasswordChange(val)}
+                        />
+                        <TouchableOpacity
+                            onPress={updateSecureTextEntry}
+                        >
+                            {data.secureTextEntry ?
+                                <Feather
+                                    name="eye-off"
+                                    color="grey"
+                                    size={20}
+                                />
+                                :
+                                <Feather
+                                    name="eye"
+                                    color="grey"
+                                    size={20}
+                                />
+                            }
+                        </TouchableOpacity>
+                    </View>
+
+                    <Text style={[styles.text_footer, {
+                        marginTop: 35
+                    }]}>New password</Text>
+                    <View style={styles.action}>
+                        <Feather
+                            name="lock"
+                            color="#05375a"
+                            size={20}
+                        />
+                        <TextInput
+                            placeholder="Your New Password"
                             secureTextEntry={data.secureTextEntry ? true : false}
                             style={styles.textInput}
                             autoCapitalize="none"
@@ -203,14 +221,6 @@ const SignUpScreen = ({ navigation }) => {
                             }
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.textPrivate}>
-                        <Text style={styles.color_textPrivate}>
-                            By signing up you agree to our
-                        </Text>
-                        <Text style={[styles.color_textPrivate, { fontWeight: 'bold' }]}>{" "}Terms of service</Text>
-                        <Text style={styles.color_textPrivate}>{" "}and</Text>
-                        <Text style={[styles.color_textPrivate, { fontWeight: 'bold' }]}>{" "}Privacy policy</Text>
-                    </View>
                     <View style={styles.button}>
                         <TouchableOpacity
                             style={[styles.signIn, { backgroundColor: bgc }]}
@@ -218,20 +228,7 @@ const SignUpScreen = ({ navigation }) => {
                         >
                             <Text style={[styles.textSign, {
                                 color: '#fff'
-                            }]}>Sign Up</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => navigation.goBack()}
-                            style={[styles.signIn, {
-                                borderColor: bgc,
-                                borderWidth: 1,
-                                marginTop: 15
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: bgc
-                            }]}>Sign In</Text>
+                            }]}>Submtt</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
@@ -240,7 +237,7 @@ const SignUpScreen = ({ navigation }) => {
     );
 };
 
-export default SignUpScreen;
+export default ChangePasswordScreen;
 
 const { bgc, statusBarColor } = color
 

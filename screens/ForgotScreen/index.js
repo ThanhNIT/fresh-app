@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { } from 'react';
 import {
     View,
     Text,
@@ -17,17 +17,14 @@ import { useTheme } from 'react-native-paper';
 
 
 import color from '../../constant/color'
-import { useNavigation } from '@react-navigation/core';
-import { AsyncStorage } from 'react-native';
 import constant from '../../constant/constant'
-import { login } from '../../actions/userActions';
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import axios from 'axios';
+
 const api = constant.api
 
-const SignInScreen = () => {
+const ForgotScreen = () => {
 
-
-    const navigation = useNavigation()
     const [data, setData] = React.useState({
         username: '',
         password: '',
@@ -39,10 +36,6 @@ const SignInScreen = () => {
 
 
     const { colors } = useTheme();
-
-    const { loading, userInfo, error } = useSelector(state => state.userLogin)
-
-    const dispatch = useDispatch()
 
     const textInputChange = (val) => {
         if (val.trim().length >= 4 && validateEmail(val.trim())) {
@@ -62,29 +55,6 @@ const SignInScreen = () => {
         }
     }
 
-    const handlePasswordChange = (val) => {
-        if (val.trim().length >= 4) {
-            setData({
-                ...data,
-                password: val,
-                isValidPassword: true
-            });
-        } else {
-            setData({
-                ...data,
-                password: val,
-                isValidPassword: false
-            });
-        }
-    }
-
-    const updateSecureTextEntry = () => {
-        setData({
-            ...data,
-            secureTextEntry: !data.secureTextEntry
-        });
-    }
-
     const handleValidUser = (val) => {
         if (val.trim().length >= 4 && validateEmail(val.trim())) {
             setData({
@@ -99,28 +69,30 @@ const SignInScreen = () => {
         }
     }
 
-    useEffect(() => {
-        if (userInfo) {
-            navigation.navigate('History')
-
-        }
-    }, [dispatch, userInfo])
-
     const validateEmail = (email) => {
         var re = /\S+@\S+\.\S+/;
         return re.test(email);
     };
 
-    const loginHandle = (userName, password) => {
+    const forgotHandle = async (userName) => {
 
-
-        if (data.username.length == 0 || data.password.length == 0) {
-            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+        if (userName.length == 0) {
+            Alert.alert('Wrong Input!', 'Email field cannot be empty.', [
                 { text: 'Okay' }
             ]);
             return;
         }
-        dispatch(login(userName, password))
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }
+        axios.post(`${api}/user/reset-password`, { email: userName }, config)
+        Alert.alert('Success', 'Please check your mail box', [
+            { text: 'Okay' }
+        ]);
+
     }
 
     return (
@@ -128,10 +100,9 @@ const SignInScreen = () => {
 
             <StatusBar backgroundColor={statusBarColor} barStyle="light-content" />
             <View style={styles.header}>
-                <Text style={styles.text_header}>Welcome!</Text>
+                <Text style={styles.text_header}>Reset password</Text>
             </View>
-            {error && Alert.alert('Warning', error.message, [
-                { text: 'Okay' }])}
+
             <Animatable.View
                 animation="fadeInUpBig"
                 style={[styles.footer, {
@@ -140,7 +111,7 @@ const SignInScreen = () => {
             >
                 <Text style={[styles.text_footer, {
                     color: colors.text
-                }]}>Username</Text>
+                }]}>Email</Text>
                 <View style={styles.action}>
                     <FontAwesome
                         name="user-o"
@@ -148,7 +119,7 @@ const SignInScreen = () => {
                         size={20}
                     />
                     <TextInput
-                        placeholder="Your Username"
+                        placeholder="Your Email"
                         placeholderTextColor="#666666"
                         style={[styles.textInput, {
                             color: colors.text
@@ -171,70 +142,21 @@ const SignInScreen = () => {
                 </View>
                 {data.isValidUser ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Username must be 4 characters long and follow email format</Text>
+                        <Text style={styles.errorMsg}>Email must be 4 characters long and follow email format</Text>
                     </Animatable.View>
                 }
 
-
-                <Text style={[styles.text_footer, {
-                    color: colors.text,
-                    marginTop: 35
-                }]}>Password</Text>
-                <View style={styles.action}>
-                    <Feather
-                        name="lock"
-                        color={colors.text}
-                        size={20}
-                    />
-                    <TextInput
-                        placeholder="Your Password"
-                        placeholderTextColor="#666666"
-                        secureTextEntry={data.secureTextEntry ? true : false}
-                        style={[styles.textInput, {
-                            color: colors.text
-                        }]}
-                        autoCapitalize="none"
-                        onChangeText={(val) => handlePasswordChange(val)}
-                    />
-                    <TouchableOpacity
-                        onPress={updateSecureTextEntry}
-                    >
-                        {data.secureTextEntry ?
-                            <Feather
-                                name="eye-off"
-                                color="grey"
-                                size={20}
-                            />
-                            :
-                            <Feather
-                                name="eye"
-                                color="grey"
-                                size={20}
-                            />
-                        }
-                    </TouchableOpacity>
-                </View>
-                {data.isValidPassword ? null :
-                    <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Password must be 4 characters long.</Text>
-                    </Animatable.View>
-                }
-
-
-                <TouchableOpacity>
-                    <Text style={{ color: bgc, marginTop: 15 }}>Forgot password?</Text>
-                </TouchableOpacity>
                 <View style={styles.button}>
                     <TouchableOpacity
                         style={[styles.signIn, { backgroundColor: bgc }]}
-                        onPress={() => { loginHandle(data.username, data.password) }}
+                        onPress={() => { forgotHandle(data.username) }}
                     >
                         <Text style={[styles.textSign, {
                             color: '#fff'
-                        }]}>Sign In</Text>
+                        }]}>Submit</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         onPress={() => navigation.navigate('Signup')}
                         style={[styles.signIn, {
                             borderColor: bgc,
@@ -245,14 +167,14 @@ const SignInScreen = () => {
                         <Text style={[styles.textSign, {
                             color: bgc
                         }]}>Sign Up</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </Animatable.View>
         </View>
     );
 };
 
-export default SignInScreen;
+export default ForgotScreen;
 
 const { bgc, statusBarColor } = color
 const styles = StyleSheet.create({
