@@ -3,6 +3,7 @@ import { USER_CHANGE_FAIL, USER_CHANGE_REQUEST, USER_CHANGE_SUCCESS, USER_LOGIN_
 import constant from '../constant/constant'
 import { AsyncStorage } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 const api = constant.api
 
 export const login = (email, password) => async (dispatch, getState) => {
@@ -47,7 +48,6 @@ export const signup = (email, password) => async (dispatch, getState) => {
             type: USER_REGISTER_REQUEST
         })
 
-
         const config = {
             headers: {
                 'Content-Type': 'application/json'
@@ -90,8 +90,7 @@ export const changePasswordAction = (oldpassword, password) => async (dispatch, 
             type: USER_CHANGE_REQUEST
         })
 
-        const user = await AsyncStorage.getItem('userInfo')
-        const userInfo = user ? JSON.parse(user) : null
+        const { userLogin: { userInfo } } = getState()
         const config = {
             headers: {
                 'Content-Type': 'application/json',
@@ -100,24 +99,25 @@ export const changePasswordAction = (oldpassword, password) => async (dispatch, 
         }
 
         const payload = {
-            "email": user.email,
+            "email": userInfo.email,
             "password": oldpassword,
             "new_password": password
         }
 
-        const { data } = await axios.post(`${api}/user/change-pasword`, payload, config)
+        console.log(payload)
 
-        if (!data.success) {
+        const { data } = await axios.post(`${api}/user/change-password`, payload, config)
+        if (!data.status) {
             dispatch({
                 type: USER_CHANGE_FAIL,
                 payload: data.data
             })
+        } else {
+            dispatch({
+                type: USER_CHANGE_SUCCESS,
+                payload: data
+            })
         }
-
-        dispatch({
-            type: USER_CHANGE_SUCCESS,
-            payload: data
-        })
 
     } catch (error) {
         dispatch({ type: USER_CHANGE_FAIL, payload: error })

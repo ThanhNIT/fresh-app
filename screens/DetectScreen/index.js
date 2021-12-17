@@ -5,9 +5,6 @@ import {
     // TouchableOpacity,
     ImageBackground,
     StyleSheet,
-    ActivityIndicator,
-    Dimensions,
-    AsyncStorage,
     Alert,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -20,6 +17,8 @@ import color from '../../constant/color';
 import { useNavigation } from '@react-navigation/core';
 import Spinner from '../../components/Spinner';
 import constant from '../../constant/constant'
+import axios from 'axios';
+axios.defaults.timeout = 1000
 const url = constant.api
 
 const DetectScreen = () => {
@@ -87,7 +86,7 @@ const DetectScreen = () => {
             formData.append('file', { uri: localUri, name: filename, type });
             fetch(url + '/fresh/detect', {
                 method: 'POST',
-                timeout: 10,
+                timeout: 3000,
                 body: formData,
                 headers: {
                     'content-type': 'multipart/form-data',
@@ -95,7 +94,7 @@ const DetectScreen = () => {
             }).then(response => response.json())
                 .then(async data => {
                     if (data.url) {
-                        await AsyncStorage.setItem('result', JSON.stringify(data))
+                        // await AsyncStorage.setItem('result', JSON.stringify(data))
                         data.allowRate = true
                         navigation.navigate('Result', data)
                     } else {
@@ -225,7 +224,7 @@ const DetectScreen = () => {
 
                 }}>
                     <View style={{ alignItems: 'center' }}>
-                        <TouchableOpacity onPress={closeSheet}>
+                        <TouchableOpacity disabled={loading} onPress={closeSheet}>
                             <View
                                 style={{
                                     height: 500,
@@ -293,7 +292,7 @@ const DetectScreen = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity style={styles.commandButton} onPress={uploadFile}>
+                    <TouchableOpacity disabled={loading} style={styles.commandButton} onPress={uploadFile}>
                         <Text style={styles.panelButtonTitle}>Submit</Text>
                     </TouchableOpacity>
                 </Animated.View></View>

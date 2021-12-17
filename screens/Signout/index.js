@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../actions/userActions';
 import { useNavigation } from '@react-navigation/native';
 import { USER_LOGIN_SUCCESS } from '../../constant/UserConstant';
+import color from '../../constant/color'
+const { bgc, statusBarColor } = color
 
 export function SignOutScreen() {
     const [user, setUser] = useState(null)
@@ -31,16 +33,16 @@ export function SignOutScreen() {
     }
 
 
-    if (!user) {
-        getUser().then(data => {
-            setUser(data);
-            dispatch({
-                type: USER_LOGIN_SUCCESS,
-                payload: user
-            })
-        })
+    // if (!user) {
+    //     getUser().then(data => {
+    //         setUser(data);
+    //         dispatch({
+    //             type: USER_LOGIN_SUCCESS,
+    //             payload: user
+    //         })
+    //     })
 
-    }
+    // }
 
     const dispatch = useDispatch()
     const signout = () => {
@@ -166,5 +168,19 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 12,
         paddingHorizontal: 16,
+    },
+    buttonExplore: {
+        backgroundColor: bgc,
+        width: 80,
+        // marginLeft: 25,
+        height: 40,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    buttonText: {
+        fontSize: 16,
+        fontWeight: 'bold'
+
     },
 });

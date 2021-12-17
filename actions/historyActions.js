@@ -1,9 +1,10 @@
 import axios from "axios"
-import { HISTORY_LIST_FAILED, HISTORY_LIST_SUCCESS, HISTORY_LIST_RESET, HISTORY_LIST_REQUEST } from "../constant/HistoryConstant"
+import { HISTORY_LIST_FAILED, HISTORY_LIST_SUCCESS, HISTORY_LIST_RESET, HISTORY_LIST_REQUEST, HISTORY_RATING_REQUEST, HISTORY_RATING_FAILED } from "../constant/HistoryConstant"
 import constant from '../constant/constant'
 import { AsyncStorage } from "react-native"
 import { useSelector } from "react-redux"
 const api = constant.api
+axios.defaults.timeout = 10000
 export const listHistory = (skip = 0, limit = 1, histories = []) => async (dispatch, getState) => {
     try {
 
@@ -53,6 +54,44 @@ export const listHistoryWithDuration = (skip = 0, limit = 1, histories = [], fro
         dispatch({ type: HISTORY_LIST_FAILED, payload: error })
     }
 }
+
+export const rateResult = (id, rate) => async (dispatch, getState) => {
+    try {
+
+        dispatch({ type: HISTORY_RATING_REQUEST })
+        const { userLogin: { userInfo } } = getState()
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+
+
+        const payload = { _id: id, rate: rate }
+        console.log(config)
+        const { data } = await axios.post(`${api}/histories/rating`, payload, config)
+        console.log(data.status)
+        if (!data.status) {
+            console.log('failed')
+            dispatch({
+                type: HISTORY_RATING_FAILED,
+                payload: data
+            })
+        } else {
+            console.log('success')
+            dispatch({
+                type: HISTORY_LIST_SUCCESS,
+                payload: data
+            })
+        }
+
+    } catch (error) {
+
+        dispatch({ type: HISTORY_LIST_FAILED, payload: error })
+    }
+}
+
 
 
 // export const productDetails = (id) => async (dispatch) => {

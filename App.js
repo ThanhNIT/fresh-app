@@ -5,7 +5,7 @@ import 'react-native-gesture-handler'
 import Router from './navigation/Router';
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider, useDispatch } from 'react-redux'
-import { historyListReducer } from './reducers/historyReducer';
+import { historyListReducer, historyRating } from './reducers/historyReducer';
 import { userChangePasswordReducer, userLoginReducer, userRegisterReducer } from './reducers/userReducer';
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
@@ -18,6 +18,7 @@ const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userChangePassword: userChangePasswordReducer,
+  rating: historyRating
 })
 
 const initialState = {

@@ -14,6 +14,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import color from '../../constant/color';
 import Rating from '../../components/Rating';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { rateResult } from '../../actions/historyActions';
 
 const DetailDetectionScreen = ({ route }) => {
 
@@ -21,6 +23,8 @@ const DetailDetectionScreen = ({ route }) => {
     const [rating, setRating] = useState(0)
     const [user, setUser] = useState(null)
     const [fruit, setFruit] = useState([{ name: 'apple', qty: 0 }, { name: 'banana', qty: 0 }, { name: 'orange', qty: 0 }, { name: 'kiwi', qty: 0 }])
+    const { error, success } = useSelector(state => state.rating)
+    const { userInfo } = useSelector(state => state.userLogin)
     const getResult = () => {
         const qty = [{ name: 'apple', qty: 0 }, { name: 'banana', qty: 0 }, { name: 'orange', qty: 0 }, { name: 'kiwi', qty: 0 }]
 
@@ -36,43 +40,33 @@ const DetailDetectionScreen = ({ route }) => {
 
     }
 
+    const dispatch = useDispatch()
+    const ratingHistory = () => {
+        dispatch(rateResult(result._id, rating))
+    }
+
     const navigation = useNavigation()
-
-    async function getUser() {
-        try {
-            const user = await AsyncStorage.getItem('userInfo')
-            return user ? JSON.parse(user) : null;
-        } catch (e) {
-            console.log('Failed to fetch the data from storage');
-        }
-    }
-
-
-    if (!user) {
-        getUser().then(data => {
-            setUser(data);
-            dispatch({
-                type: USER_LOGIN_SUCCESS,
-                payload: user
-            })
-        })
-
-    }
 
     useEffect(() => {
         getResult()
-
-    }, [])
+        if (success) {
+            Alert.alert('Success', 'Thanks for your submit', [
+                { text: 'Okay' }])
+        }
+        if (error) {
+            Alert.alert('Error', error.message, [
+                { text: 'Okay' }])
+        }
+    }, [success, error])
 
     const handleValue = (star) => {
-        if (user) {
+        if (userInfo) {
             setRating(star)
         } else {
             Alert.alert('Oops', 'You need to login before rating.', [
-                { text: 'Okay', onPress: () => navigation.navigate('Signin') }
+                { text: 'Okay', onPress: () => navigation.navigate('Signin', true) }
             ]);
         }
-
     }
 
     return (
@@ -155,11 +149,11 @@ const DetailDetectionScreen = ({ route }) => {
                     <View style={{ flexDirection: 'row' }}>
 
                         <Text style={{ alignSelf: 'flex-end', fontSize: 15 }}>Help us improve:</Text>
-                        <Rating sz={30} gain={result ? result.rate : 0} onChangeValue={handleValue} rt={result.allowRate}></Rating>
+                        <Rating sz={30} gain={result && result.allowRate ? result.rate : 0} onChangeValue={handleValue} rt={result && result.allowRate && result.allowRate}></Rating>
                     </View>
                 </View>
             </View>
-            <TouchableOpacity style={styles.commandButton}>
+            <TouchableOpacity disabled={rating === 0 ? true : false} style={[styles.commandButton, { opacity: rating === 0 ? 0.5 : 1 }]} onPress={ratingHistory}>
                 <Text style={styles.panelButtonTitle}>Submit</Text>
             </TouchableOpacity>
         </View>

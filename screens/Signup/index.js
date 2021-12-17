@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
     Text,
@@ -69,7 +69,7 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     const signUp = () => {
-        dispatch(signup(data.username, data, password))
+        dispatch(signup(data.username, data.password))
     }
 
     const updateSecureTextEntry = () => {
@@ -101,7 +101,7 @@ const SignUpScreen = ({ navigation }) => {
                 <Text style={styles.text_header}>Register Now!</Text>
             </View>
             {success && Alert.alert('Success', "Create account success", [
-                { text: 'Okay' }
+                { text: 'Okay', onPress: () => navigation.navigate('Signin') }
             ])}
             <Animatable.View
                 animation="fadeInUpBig"
@@ -214,7 +214,7 @@ const SignUpScreen = ({ navigation }) => {
                     <View style={styles.button}>
                         <TouchableOpacity
                             style={[styles.signIn, { backgroundColor: bgc }]}
-                            onPress={() => { }}
+                            onPress={signUp}
                         >
                             <Text style={[styles.textSign, {
                                 color: '#fff'

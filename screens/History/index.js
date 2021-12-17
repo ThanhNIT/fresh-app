@@ -13,6 +13,7 @@ import { HISTORY_LIST_RESET } from '../../constant/HistoryConstant'
 
 const { bgc, statusBarColor } = color
 
+
 const HistoryScreen = () => {
     const navigation = useNavigation()
     const d = new Date()
@@ -23,7 +24,7 @@ const HistoryScreen = () => {
     const [show, setShow] = useState(false);
     const [user, setUser] = useState(null)
     const [skip, setSkip] = useState(0)
-    const [limit, setLimit] = useState(1)
+    const [limit, setLimit] = useState(10)
     const [direction, setDirection] = useState(false);
     const [duration, setDuration] = useState(false)
     const dispatch = useDispatch();
@@ -41,16 +42,16 @@ const HistoryScreen = () => {
     }
 
 
-    if (!user) {
-        getUser().then(data => {
-            setUser(data);
-            dispatch({
-                type: USER_LOGIN_SUCCESS,
-                payload: user
-            })
-        })
+    // if (!user) {
+    //     getUser().then(data => {
+    //         setUser(data);
+    //         // dispatch({
+    //         //     type: USER_LOGIN_SUCCESS,
+    //         //     payload: user
+    //         // })
+    //     })
 
-    }
+    // }
 
     const onChange = (event, selectedDate) => {
 
@@ -126,7 +127,7 @@ const HistoryScreen = () => {
 
     useEffect(() => {
 
-        if (user && user.token) {
+        if (userInfo && userInfo.token) {
 
             if (duration) {
                 dispatch(listHistoryWithDuration(skip, limit, histories, from.toISOString().split('T')[0], to.toISOString().split('T')[0]))
@@ -134,11 +135,11 @@ const HistoryScreen = () => {
                 dispatch(listHistory(skip, limit, histories))
             }
         }
-    }, [dispatch, user, skip, to])
+    }, [dispatch, userInfo, skip, to])
 
     return (
 
-        <>{!user && userInfo ? <View style={{ justifyContent: 'center', alignItems: 'center', top: Dimensions.get('window').height / 2 }}>
+        <>{!user && !userInfo ? <View style={{ justifyContent: 'center', alignItems: 'center', top: Dimensions.get('window').height / 2 }}>
             <Text style={{ color: 'gray' }}>Please login with your account to see history</Text>
             <Pressable style={styles.buttonExplore} onPress={() => navigation.navigate('Signin')}>
                 <Text style={styles.buttonText}>Login</Text>

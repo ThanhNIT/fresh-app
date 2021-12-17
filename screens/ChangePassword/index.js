@@ -119,7 +119,7 @@ const ChangePasswordScreen = ({ navigation }) => {
 
                     <Text style={[styles.text_footer, {
                         marginTop: 35
-                    }]}>Old Password</Text>
+                    }]}>Current Password</Text>
                     <View style={styles.action}>
                         <Feather
                             name="lock"
@@ -224,11 +224,11 @@ const ChangePasswordScreen = ({ navigation }) => {
                     <View style={styles.button}>
                         <TouchableOpacity
                             style={[styles.signIn, { backgroundColor: bgc }]}
-                            onPress={() => { }}
+                            onPress={changePassword}
                         >
                             <Text style={[styles.textSign, {
                                 color: '#fff'
-                            }]}>Submtt</Text>
+                            }]}>Submit</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

@@ -24,7 +24,7 @@ import { login } from '../../actions/userActions';
 import { useSelector, useDispatch } from 'react-redux'
 const api = constant.api
 
-const SignInScreen = () => {
+const SignInScreen = ({ route }) => {
 
 
     const navigation = useNavigation()
@@ -36,6 +36,8 @@ const SignInScreen = () => {
         isValidUser: true,
         isValidPassword: true,
     });
+
+    const [redirect, setRedirect] = useState(route.params || false)
 
 
     const { colors } = useTheme();
@@ -101,10 +103,12 @@ const SignInScreen = () => {
 
     useEffect(() => {
         if (userInfo) {
-            navigation.navigate('History')
-
+            !redirect ? navigation.navigate('History') : navigation.navigate('Result')
         }
-    }, [dispatch, userInfo])
+
+        error && Alert.alert('Warning', error.message, [
+            { text: 'Okay' }])
+    }, [dispatch, userInfo, error])
 
     const validateEmail = (email) => {
         var re = /\S+@\S+\.\S+/;
@@ -112,7 +116,6 @@ const SignInScreen = () => {
     };
 
     const loginHandle = (userName, password) => {
-
 
         if (data.username.length == 0 || data.password.length == 0) {
             Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
@@ -130,8 +133,6 @@ const SignInScreen = () => {
             <View style={styles.header}>
                 <Text style={styles.text_header}>Welcome!</Text>
             </View>
-            {error && Alert.alert('Warning', error.message, [
-                { text: 'Okay' }])}
             <Animatable.View
                 animation="fadeInUpBig"
                 style={[styles.footer, {
@@ -221,7 +222,7 @@ const SignInScreen = () => {
                 }
 
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Forgot')}>
                     <Text style={{ color: bgc, marginTop: 15 }}>Forgot password?</Text>
                 </TouchableOpacity>
                 <View style={styles.button}>
