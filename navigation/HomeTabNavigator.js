@@ -17,8 +17,9 @@ const Tab = createBottomTabNavigator()
 
 const HomeTabNavigator = (props) => {
     return (
-        <Tab.Navigator screenOptions={{
-            tabBarActiveTintColor: '#f15454',
+        <Tab.Navigator initialRouteName='Home' screenOptions={{
+            tabBarActiveTintColor: bgc,
+
         }}>
             <Tab.Screen name={"History"}
                 component={HistoryScreen}
@@ -73,3 +74,5 @@ const HomeTabNavigator = (props) => {
 }
 
 export default HomeTabNavigator
+
+

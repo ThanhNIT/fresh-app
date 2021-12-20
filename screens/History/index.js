@@ -32,27 +32,6 @@ const HistoryScreen = () => {
     const { loading, histories } = useSelector((state) => state.historiesList)
     const { userInfo } = useSelector((state) => state.userLogin)
 
-    async function getUser() {
-        try {
-            const user = await AsyncStorage.getItem('userInfo')
-            return user ? JSON.parse(user) : null;
-        } catch (e) {
-            console.log('Failed to fetch the data from storage');
-        }
-    }
-
-
-    // if (!user) {
-    //     getUser().then(data => {
-    //         setUser(data);
-    //         // dispatch({
-    //         //     type: USER_LOGIN_SUCCESS,
-    //         //     payload: user
-    //         // })
-    //     })
-
-    // }
-
     const onChange = (event, selectedDate) => {
 
         setShow(Platform.OS === 'ios');

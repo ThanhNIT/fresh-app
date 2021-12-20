@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/core';
 import Spinner from '../../components/Spinner';
 import constant from '../../constant/constant'
 import axios from 'axios';
+
 axios.defaults.timeout = 1000
 const url = constant.api
 
@@ -146,7 +147,7 @@ const DetectScreen = () => {
         <View style={styles.panel}>
             <View style={{ alignItems: 'center' }}>
                 <Text style={styles.panelTitle}>Upload Photo</Text>
-                <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
+                <Text style={styles.panelSubtitle}>Choose Your Picture</Text>
             </View>
             <TouchableOpacity style={styles.panelButton} onPress={takePhotoFromCamera}>
                 <Text style={styles.panelButtonTitle}>Take Photo</Text>
@@ -362,7 +363,7 @@ const styles = StyleSheet.create({
     panelButton: {
         padding: 13,
         borderRadius: 10,
-        backgroundColor: '#FF6347',
+        backgroundColor: bgc,
         alignItems: 'center',
         marginVertical: 7,
     },

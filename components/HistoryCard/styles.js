@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     date: {
-        textAlign: 'right'
+        textAlign: 'right',
+        color: 'gray'
     }
 })
 

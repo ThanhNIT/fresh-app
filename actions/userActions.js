@@ -4,6 +4,7 @@ import constant from '../constant/constant'
 import { AsyncStorage } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+import { HISTORY_LIST_RESET } from "../constant/HistoryConstant";
 const api = constant.api
 
 export const login = (email, password) => async (dispatch, getState) => {
@@ -131,6 +132,10 @@ export const logout = () => async (dispatch) => {
 
         dispatch({
             type: USER_LOGOUT
+        })
+
+        dispatch({
+            type: HISTORY_LIST_RESET
         })
 
     } catch (error) {

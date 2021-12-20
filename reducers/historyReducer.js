@@ -28,12 +28,12 @@ export const historyListReducer = (state = { histories: [], loading: false }, ac
     }
 }
 
-export const historyRating = (state = { loading: false }, action) => {
+export const historyRating = (state = { success: false }, action) => {
 
     switch (action.type) {
         case HISTORY_RATING_REQUEST:
             return {
-                loading: true,
+                success: false,
             }
         case HISTORY_RATING_SUCCESS:
             return {

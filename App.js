@@ -12,6 +12,7 @@ import thunk from 'redux-thunk'
 import { SignOutScreen } from './screens/Signout';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ForgotScreen from './screens/ForgotScreen';
+import { AsyncStorage } from 'react-native';
 
 const reducer = combineReducers({
   historiesList: historyListReducer,
