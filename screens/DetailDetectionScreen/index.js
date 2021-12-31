@@ -14,13 +14,14 @@ import Rating from '../../components/Rating';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { rateResult } from '../../actions/historyActions';
+import { HISTORY_RATING_RESET } from '../../constant/HistoryConstant';
 
 const DetailDetectionScreen = ({ route }) => {
 
     const [result, setResult] = useState(route.params)
     const [rating, setRating] = useState(0)
     const [fruit, setFruit] = useState([{ name: 'apple', qty: 0 }, { name: 'banana', qty: 0 }, { name: 'orange', qty: 0 }, { name: 'kiwi', qty: 0 }])
-    const { error, success } = useSelector(state => state.rating)
+    const { error, success } = useSelector(state => state.historyRating)
     const { userInfo } = useSelector(state => state.userLogin)
     const getResult = () => {
         const qty = [{ name: 'apple', qty: 0 }, { name: 'banana', qty: 0 }, { name: 'orange', qty: 0 }, { name: 'kiwi', qty: 0 }]
@@ -45,10 +46,19 @@ const DetailDetectionScreen = ({ route }) => {
     const navigation = useNavigation()
 
     useEffect(() => {
+        console.log('success: ' + success)
+    }, [success])
+
+    useEffect(() => {
         getResult()
         if (success) {
             Alert.alert('Success', 'Thanks for your submit', [
-                { text: 'Okay' }])
+                {
+                    text: 'Okay', onPress: () => {
+                        dispatch({ type: HISTORY_RATING_RESET })
+                        navigation.navigate('History')
+                    }
+                },])
         }
         if (error) {
             Alert.alert('Error', error.message, [
@@ -57,7 +67,6 @@ const DetailDetectionScreen = ({ route }) => {
     }, [success, error])
 
     useEffect(() => {
-        console.log('rating' + rating)
     }, [rating])
 
     const handleValue = (star) => {

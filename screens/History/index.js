@@ -86,8 +86,10 @@ const HistoryScreen = () => {
     };
 
     const loadMore = () => {
-        dispatch(listHistory(skip + 1, limit, histories))
-        setSkip(skip + 1)
+        console.log(histories.length)
+        if (histories && histories.length >= (skip + 1) * limit) {
+            setSkip(skip + 1)
+        }
     }
 
     const reload = () => {
@@ -150,12 +152,12 @@ const HistoryScreen = () => {
             )}
 
             <View>
-                <FlatList data={histories} renderItem={({ item, i }) => <HistoryCard key={i} onPress={() => console.warn('cliecked')} post={item} ></HistoryCard>}>
+                <FlatList onEndReached={loadMore} onEndReachedThreshold={.7} data={histories} renderItem={({ item, i }) => <HistoryCard key={i} onPress={() => console.warn('cliecked')} post={item} ></HistoryCard>}>
                 </FlatList >
             </View >
-            {histories && histories.length >= (skip + 1) * limit && <View style={{ alignItems: 'center' }} >
+            {/* {histories && histories.length >= (skip + 1) * limit && <View style={{ alignItems: 'center' }} >
                 <Text style={{ color: color.bgc }} onPress={() => setSkip(skip + 1)}>Load more</Text>
-            </View>}
+            </View>} */}
         </View>
         }
         </>

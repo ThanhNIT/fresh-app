@@ -1,5 +1,5 @@
 import axios from "axios"
-import { HISTORY_LIST_FAILED, HISTORY_LIST_SUCCESS, HISTORY_LIST_RESET, HISTORY_LIST_REQUEST, HISTORY_RATING_REQUEST, HISTORY_RATING_FAILED } from "../constant/HistoryConstant"
+import { HISTORY_LIST_FAILED, HISTORY_LIST_SUCCESS, HISTORY_LIST_RESET, HISTORY_LIST_REQUEST, HISTORY_RATING_REQUEST, HISTORY_RATING_FAILED, HISTORY_RATING_SUCCESS } from "../constant/HistoryConstant"
 import constant from '../constant/constant'
 import { AsyncStorage } from "react-native"
 import { useSelector } from "react-redux"
@@ -73,15 +73,13 @@ export const rateResult = (id, rate) => async (dispatch, getState) => {
         const { data } = await axios.post(`${api}/histories/rating`, payload, config)
         console.log(data.status)
         if (!data.status) {
-            console.log('failed')
             dispatch({
                 type: HISTORY_RATING_FAILED,
                 payload: data
             })
         } else {
-            console.log('success')
             dispatch({
-                type: HISTORY_LIST_SUCCESS,
+                type: HISTORY_RATING_SUCCESS,
                 payload: data
             })
         }

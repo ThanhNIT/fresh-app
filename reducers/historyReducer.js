@@ -1,4 +1,4 @@
-import { HISTORY_LIST_FAILED, HISTORY_LIST_REQUEST, HISTORY_LIST_SUCCESS, HISTORY_LIST_RESET, HISTORY_RATING_REQUEST, HISTORY_RATING_FAILED, HISTORY_RATING_SUCCESS } from "../constant/HistoryConstant"
+import { HISTORY_LIST_FAILED, HISTORY_LIST_REQUEST, HISTORY_LIST_SUCCESS, HISTORY_LIST_RESET, HISTORY_RATING_REQUEST, HISTORY_RATING_FAILED, HISTORY_RATING_SUCCESS, HISTORY_RATING_RESET } from "../constant/HistoryConstant"
 
 export const historyListReducer = (state = { histories: [], loading: false }, action) => {
 
@@ -38,6 +38,10 @@ export const historyRating = (state = { success: false }, action) => {
         case HISTORY_RATING_SUCCESS:
             return {
                 success: true,
+            }
+        case HISTORY_RATING_RESET:
+            return {
+                success: false,
             }
         case HISTORY_RATING_FAILED:
             return {

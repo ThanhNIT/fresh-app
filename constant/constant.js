@@ -1,1 +1,1 @@
-export default { api: 'http://35.223.89.11/api' }
+export default { api: 'http://35.184.213.117/api' }

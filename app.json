@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "Airbnb",
-    "slug": "Airbnb",
+    "name": "Fresh App",
+    "slug": "Fresh",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo3.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo3.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,9 +21,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo3.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.thanh829.Fresh"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -43,14 +43,14 @@ const Home = () => {
                 <Animatable.Image
                     animation="bounceIn"
                     duraton="1500"
-                    source={require('../../assets/logo2.png')}
+                    source={require('../../assets/logo3.png')}
                     style={styles.logo}
                     resizeMode="stretch"
                 />
             </View>
             <Animatable.View
                 style={[styles.footer, {
-                    backgroundColor: colors.background
+                    backgroundColor: color.bgc
                 }]}
                 animation="fadeInUpBig"
             >
@@ -88,7 +88,7 @@ const { bgc, statusBarColor } = color
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: bgc
+        backgroundColor: '#fff'
     },
     header: {
         flex: 2,
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     buttonExplore: {
-        backgroundColor: bgc,
+        backgroundColor: '#fff',
         width: 120,
         // marginLeft: 25,
         height: 40,

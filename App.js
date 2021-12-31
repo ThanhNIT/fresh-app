@@ -19,7 +19,7 @@ const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userChangePassword: userChangePasswordReducer,
-  rating: historyRating
+  historyRating: historyRating
 })
 
 const initialState = {
