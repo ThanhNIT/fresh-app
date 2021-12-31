@@ -46,12 +46,8 @@ const DetailDetectionScreen = ({ route }) => {
     const navigation = useNavigation()
 
     useEffect(() => {
-        console.log('success: ' + success)
-    }, [success])
-
-    useEffect(() => {
         getResult()
-        if (success) {
+        if (success && rating > 0) {
             Alert.alert('Success', 'Thanks for your submit', [
                 {
                     text: 'Okay', onPress: () => {
@@ -104,8 +100,6 @@ const DetailDetectionScreen = ({ route }) => {
                             borderRadius: 15,
                             justifyContent: 'center',
                             alignItems: 'center',
-
-
                         }}
                             opacity={0.5}
                         >
@@ -126,7 +120,10 @@ const DetailDetectionScreen = ({ route }) => {
                         <ImageBackground
                             // source={{ uri: image }}
                             source={{ uri: result.url }}
-                            style={{ flex: 1, height: undefined, width: undefined }}
+                            style={{
+                                flex: 1, height: undefined, width: undefined, borderColor: color.bgc,
+                                borderWidth: 2
+                            }}
                             resizeMode='contain'
                         >
 
@@ -147,7 +144,7 @@ const DetailDetectionScreen = ({ route }) => {
 
             </View>
 
-            <View style={{ flex: 1, marginTop: 5, }}>
+            <View style={{ flex: 1, marginTop: 5, marginLeft: 10 }}>
                 <Text style={styles.result}>Result:</Text>
                 {fruit[0].qty > 0 && <Text style={styles.date}>Apple: {fruit[0].qty}</Text>}
                 {fruit[1].qty > 0 && <Text style={styles.date}>Banana: {fruit[1].qty}</Text>}
@@ -159,7 +156,7 @@ const DetailDetectionScreen = ({ route }) => {
                 </FlatList > */}
 
                 <View>
-                    <Text style={{ alignSelf: 'flex-end' }}>Excution time: {(result && result.time && result.time.toFixed(2)) || 0}s</Text>
+                    <Text style={{ color: 'gray' }}>Excution time: {(result && result.time && result.time.toFixed(2)) || 0}s</Text>
                     <View style={{ flexDirection: 'row' }}>
 
                         <Text style={{ alignSelf: 'flex-end', fontSize: 15, color: 'gray' }}>{(result && !result.allowRate) ? 'Your rate:' : 'Help us improve:'}</Text>

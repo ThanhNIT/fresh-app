@@ -152,7 +152,7 @@ const HistoryScreen = () => {
             )}
 
             <View>
-                <FlatList onEndReached={loadMore} onEndReachedThreshold={.7} data={histories} renderItem={({ item, i }) => <HistoryCard key={i} onPress={() => console.warn('cliecked')} post={item} ></HistoryCard>}>
+                <FlatList onEndReached={loadMore} onEndReachedThreshold={.7} data={histories} renderItem={({ item, i }) => <HistoryCard key={i} post={item} ></HistoryCard>}>
                 </FlatList >
             </View >
             {/* {histories && histories.length >= (skip + 1) * limit && <View style={{ alignItems: 'center' }} >

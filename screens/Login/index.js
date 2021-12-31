@@ -26,7 +26,6 @@ const api = constant.api
 
 const SignInScreen = ({ route }) => {
 
-
     const navigation = useNavigation()
     const [data, setData] = React.useState({
         username: '',
@@ -47,7 +46,7 @@ const SignInScreen = ({ route }) => {
     const dispatch = useDispatch()
 
     const textInputChange = (val) => {
-        if (val.trim().length >= 4 && validateEmail(val.trim())) {
+        if (val.trim().length >= 8) {
             setData({
                 ...data,
                 username: val,
@@ -65,7 +64,7 @@ const SignInScreen = ({ route }) => {
     }
 
     const handlePasswordChange = (val) => {
-        if (val.trim().length >= 4) {
+        if (val.trim().length >= 8) {
             setData({
                 ...data,
                 password: val,
@@ -88,7 +87,7 @@ const SignInScreen = ({ route }) => {
     }
 
     const handleValidUser = (val) => {
-        if (val.trim().length >= 4 && validateEmail(val.trim())) {
+        if (val.trim().length >= 4) {
             setData({
                 ...data,
                 isValidUser: true
@@ -172,7 +171,7 @@ const SignInScreen = ({ route }) => {
                 </View>
                 {data.isValidUser ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Username must be 4 characters long and follow email format</Text>
+                        <Text style={styles.errorMsg}>Username must be 8 characters long</Text>
                     </Animatable.View>
                 }
 
@@ -217,7 +216,7 @@ const SignInScreen = ({ route }) => {
                 </View>
                 {data.isValidPassword ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Password must be 4 characters long.</Text>
+                        <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
                     </Animatable.View>
                 }
 

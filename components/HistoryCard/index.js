@@ -9,8 +9,7 @@ const HistoryCard = (props) => {
 
     const post = props.post
     const navigation = useNavigation()
-    post.allowRate = false
-
+    post.allowRate = post.rate === 0
     return (
         <TouchableWithoutFeedback onPress={() => navigation.navigate('HistoryDetail', post)}>
             <View style={styles.container}>

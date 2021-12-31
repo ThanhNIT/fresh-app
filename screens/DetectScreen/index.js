@@ -18,6 +18,8 @@ import { useNavigation } from '@react-navigation/core';
 import Spinner from '../../components/Spinner';
 import constant from '../../constant/constant'
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { rateResult } from '../../actions/historyActions';
 
 axios.defaults.timeout = 1000
 const url = constant.api
@@ -29,9 +31,9 @@ const DetectScreen = () => {
     const [camStatus, setCamStatus] = useState(false)
     const [libStatus, setLibStatus] = useState(false)
     const [loading, setLoading] = useState(false)
-
+    const { userInfo } = useSelector(state => state.userLogin)
     const navigation = useNavigation()
-
+    const dispatch = useDispatch()
     useEffect(() => {
         setLoading(false)
     }, [])
@@ -96,6 +98,9 @@ const DetectScreen = () => {
                 .then(async data => {
                     if (data.url) {
                         // await AsyncStorage.setItem('result', JSON.stringify(data))
+                        if (userInfo) {
+                            dispatch(rateResult(data._id, 0))
+                        }
                         data.allowRate = true
                         navigation.navigate('Result', data)
                     } else {
@@ -108,10 +113,6 @@ const DetectScreen = () => {
                 }).catch((err) => setLoading(false));
 
         }
-
-
-
-
 
     }
 
@@ -293,8 +294,10 @@ const DetectScreen = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity disabled={loading} style={styles.commandButton} onPress={uploadFile}>
-                        <Text style={styles.panelButtonTitle}>Submit</Text>
+                    <TouchableOpacity disabled={loading || !image} onPress={uploadFile}>
+                        <View style={{ ...styles.commandButton, opacity: loading || !image ? 0.5 : 1 }}>
+                            <Text style={styles.panelButtonTitle}>Submit</Text>
+                        </View>
                     </TouchableOpacity>
                 </Animated.View></View>
 

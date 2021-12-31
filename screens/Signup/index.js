@@ -69,6 +69,19 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     const signUp = () => {
+        if (data.username.length == 0 || data.password.length == 0 || data.confirm_password.length == 0) {
+            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+                { text: 'Okay' }
+            ]);
+            return;
+        }
+
+        if (data.password != data.confirm_password) {
+            Alert.alert('Wrong Input!', 'Password and confirm password must equal.', [
+                { text: 'Okay' }
+            ]);
+            return;
+        }
         dispatch(signup(data.username, data.password))
     }
 

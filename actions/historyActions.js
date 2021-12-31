@@ -69,9 +69,7 @@ export const rateResult = (id, rate) => async (dispatch, getState) => {
 
 
         const payload = { _id: id, rate: rate }
-        console.log(config)
         const { data } = await axios.post(`${api}/histories/rating`, payload, config)
-        console.log(data.status)
         if (!data.status) {
             dispatch({
                 type: HISTORY_RATING_FAILED,
