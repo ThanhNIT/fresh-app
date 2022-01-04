@@ -21,7 +21,7 @@ const reducer = combineReducers({
   userChangePassword: userChangePasswordReducer,
   historyRating: historyRating
 })
-// test
+// test 2
 const initialState = {
   userLogin: { loading: false, userInfo: null }
 }
